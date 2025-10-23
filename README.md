@@ -40,7 +40,7 @@ Este repositório contém o **frontend** da aplicação **analisAI**, desenvolvi
 
 1.Navegue para a pasta do frontend:
   ```bash
-  cd front
+  cd analisai
 ````
 
 2. Instale as dependências
@@ -50,7 +50,7 @@ Este repositório contém o **frontend** da aplicação **analisAI**, desenvolvi
   
 3. Rode em modo desenvolvimento
   ```
-    ng serve
+    ng serve -o
   ```
   
 ### 🔗Backend do Projeto: [AnalisAI - Backend](https://github.com/BeatrizParedes/AnalisAI-Back)
