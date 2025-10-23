@@ -1,0 +1,38 @@
+<div class="sidebar">
+  <!-- 🔹 Logo -->
+  <div class="logo">
+    <i class="fa-solid fa-brain"></i>
+    <span>AnalisAI</span>
+  </div>
+
+  <!-- 🔹 Menu principal -->
+  <nav class="menu">
+    <button [class.active]="activeRoute === 'dashboard'" (click)="go('dashboard')">
+      <i class="fa-solid fa-chart-line"></i> Dashboard
+    </button>
+    <button [class.active]="activeRoute === 'projetos'" (click)="go('projetos')">
+      <i class="fa-solid fa-diagram-project"></i> Projetos
+    </button>
+    <button [class.active]="activeRoute === 'tarefas'" (click)="go('tarefas')">
+      <i class="fa-solid fa-list-check"></i> Tarefas
+    </button>
+    <button [class.active]="activeRoute === 'equipe'" (click)="go('equipe')">
+      <i class="fa-solid fa-users"></i> Equipe
+    </button>
+    <button [class.active]="activeRoute === 'analises'" (click)="go('analises')">
+      <i class="fa-solid fa-magnifying-glass-chart"></i> Análises
+    </button>
+  </nav>
+
+  <!-- 🔹 Seção inferior -->
+  <div class="bottom">
+    <hr />
+    <button [class.active]="activeRoute === 'configuracoes'" (click)="go('configuracoes')">
+      <i class="fa-solid fa-gear"></i> Configurações
+    </button>
+    <button (click)="go('sair')">
+      <i class="fa-solid fa-right-from-bracket"></i> Sair
+    </button>
+    <p class="footer">© 2025 AnalisAI</p>
+  </div>
+</div>

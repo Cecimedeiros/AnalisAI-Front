@@ -1,0 +1,353 @@
+/* ===========================
+Estilo base
+=========================== */
+.dashboard {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
+  background-color: #041b2d;
+  font-family: 'Inter', sans-serif;
+  color: #e9eef7;
+}
+
+.content {
+  padding: 3rem 4rem;
+  background: linear-gradient(180deg, #051e33 0%, #031728 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* ===========================
+Cabeçalho
+=========================== */
+header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+header h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+header p {
+  color: #9dbce1;
+  font-size: 1rem;
+}
+
+/* ===========================
+Prazos
+=========================== */
+.deadlines {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0a2541;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+}
+.deadlines small {
+  display: block;
+  color: #9dbce1;
+  font-size: 0.85rem;
+}
+.deadlines h3 {
+  margin: 0.3rem 0 0;
+  font-size: 1.8rem;
+  color: #ffffff;
+  font-weight: 600;
+}
+.optimized {
+  border-left: 3px solid #2b6eff;
+  padding-left: 1rem;
+}
+.recalc {
+  background: #2b6eff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 1.4rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.recalc:hover {
+  background: #437fff;
+  box-shadow: 0 0 10px rgba(67, 127, 255, 0.4);
+}
+.loading {
+  margin-left: 0.6rem;
+  font-size: 0.85rem;
+  color: #9dbce1;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+/* ===========================
+KPIs
+=========================== */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.2rem;
+}
+.kpi {
+  background: rgba(10, 35, 63, 0.8);
+  border-radius: 18px;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.04);
+  transition: transform 0.25s ease;
+}
+.kpi:hover {
+  transform: translateY(-4px);
+}
+.kpi small {
+  color: #93b4d9;
+  font-size: 0.9rem;
+}
+.kpi h2 {
+  color: #ffffff;
+  margin-top: 0.4rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+}
+
+/* ===========================
+Tabela de tarefas 
+=========================== */
+.tasks {
+  background: #0b2440;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25);
+}
+.tasks h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #cde2ff;
+  margin-bottom: 1.2rem;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+thead {
+  background: #0f3351;
+}
+th, td {
+  padding: 1rem 1.2rem;
+  font-size: 0.95rem;
+}
+th {
+  color: #93b4d9;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.03rem;
+  border-bottom: 1px solid #143b63;
+}
+td {
+  color: #e9eef7;
+  border-bottom: 1px solid #12324e;
+}
+tr:hover {
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+td span {
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+.to-do {
+  background: #bcd1ff;
+  color: #0b2240;
+}
+.in-progress {
+  background: #ffd978;
+  color: #3a2e00;
+}
+.done {
+  background: #a9ffb2;
+  color: #00330f;
+}
+
+/* ===========================
+Cards
+=========================== */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.8rem;
+}
+.card {
+  background: #0b2440;
+  border-radius: 18px;
+  padding: 1.8rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+.card h3 {
+  font-weight: 600;
+  color: #bcd1ff;
+  margin-bottom: 1rem;
+}
+.placeholder {
+  border: 1px dashed #29507e;
+  border-radius: 14px;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7fa6d5;
+}
+
+/* ===========================
+Chat flutuante
+=========================== */
+.chat-box {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 340px;
+  background: #0b2240;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 999;
+}
+.chat-header {
+  background: #163761;
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #e9eef7;
+  font-weight: 600;
+  font-size: 1rem;
+}
+.chat-messages {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  background: #0c2644;
+}
+.message {
+  max-width: 80%;
+  padding: 0.7rem 1rem;
+  border-radius: 14px;
+  line-height: 1.4;
+  font-size: 0.9rem;
+}
+.message.user {
+  background: #2c5cff;
+  color: #fff;
+  align-self: flex-end;
+}
+.message.ai {
+  background: #13355c;
+  color: #eaf2ff;
+  align-self: flex-start;
+}
+.chat-input {
+  display: flex;
+  border-top: 1px solid #1e3f6d;
+  background: #0b2240;
+}
+.chat-input input {
+  flex: 1;
+  background: transparent;
+  color: #eaf2ff;
+  border: none;
+  padding: 1rem;
+  outline: none;
+}
+.chat-input button {
+  background: #2c5cff;
+  border: none;
+  color: #fff;
+  padding: 0 1.2rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.chat-input button:hover {
+  background: #3b6cff;
+}
+
+/* ===========================
+Painel lateral IA
+=========================== */
+.analysis-panel {
+  position: fixed;
+  top: 0;
+  right: -420px;
+  width: 420px;
+  height: 100%;
+  background: #0b1e33;
+  border-left: 1px solid #1e3f6d;
+  box-shadow: -6px 0 25px rgba(0, 0, 0, 0.5);
+  color: #e9eef7;
+  padding: 2rem;
+  transition: right 0.3s ease;
+  z-index: 1000;
+}
+.analysis-panel.active {
+  right: 0;
+}
+.analysis-panel .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.analysis-panel .header h3 {
+  font-weight: 700;
+  color: #bcd1ff;
+}
+.close {
+  background: transparent;
+  border: none;
+  color: #e9eef7;
+  font-size: 1.6rem;
+  cursor: pointer;
+}
+.section {
+  margin-top: 1.5rem;
+  background: #0f2a4a;
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+}
+.section h5 {
+  color: #bcd1ff;
+  margin-bottom: 0.6rem;
+  font-size: 1rem;
+}
+.apply {
+  margin-top: 1rem;
+  background: #2b6eff;
+  color: #fff;
+  border: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+.apply:hover {
+  background: #3c7bff;
+  box-shadow: 0 0 10px rgba(59, 123, 255, 0.4);
+}

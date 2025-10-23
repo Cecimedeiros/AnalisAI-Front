@@ -1,0 +1,33 @@
+<div class="login-page">
+  <div class="login-left">
+    <div class="brand">
+      <i class="fa-solid fa-brain"></i>
+      <span>AnalisAI</span>
+    </div>
+    <div class="headline">
+      <h1>Planeje com Inteligência</h1>
+      <p>Conecte-se ao Jira e deixe a IA otimizar suas entregas.</p>
+    </div>
+  </div>
+
+  <div class="login-right">
+    <div class="card">
+      <h2>Entrar</h2>
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="email@empresa.com" />
+
+        <label>Senha</label>
+        <input type="password" formControlName="password" placeholder="••••••••" />
+
+        <div class="remember">
+          <input type="checkbox" id="remember" formControlName="remember" />
+          <label for="remember">Lembrar-me</label>
+        </div>
+
+        <button type="submit" class="btn-primary">Entrar</button>
+        <button type="button" class="btn-secondary" (click)="goDemo()">Acessar Demo</button>
+      </form>
+    </div>
+  </div>
+</div>
