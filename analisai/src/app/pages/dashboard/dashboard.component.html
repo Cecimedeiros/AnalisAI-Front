@@ -7,43 +7,74 @@
       <p>Insights gerados pela IA com base no backlog do Jira</p>
     </header>
 
-    <section class="deadlines">
-      <div>
-        <small>Prazo atual</small>
-        <h3>{{ projectDeadline }}</h3>
-      </div>
-      <div class="optimized">
-        <small>Prazo otimizado pela IA</small>
-        <h3>{{ optimizedDeadline }}</h3>
-        <span *ngIf="recalculating" class="loading">Recalculando...</span>
-      </div>
-      <button class="recalc" (click)="simulateProgressChange()">Simular mudança no progresso</button>
-    </section>
-
     <section class="kpis">
-      <div class="kpi"><small>Gargalos</small><h2>5</h2></div>
-      <div class="kpi"><small>Dependências</small><h2>12</h2></div>
-      <div class="kpi"><small>Riscos</small><h2>3</h2></div>
-      <div class="kpi"><small>Execuções paralelas</small><h2>8</h2></div>
+      <div class="kpi">
+        <small>Total de Tarefas</small>
+        <h2>{{ stats?.totalTasks || 0 }}</h2>
+      </div>
+      
+      <div class="kpi">
+        <small>Em Atraso</small>
+        <h2 [style.color]="(stats?.delayedTasks || 0) > 0 ? '#ff6b6b' : 'white'">
+          {{ stats?.delayedTasks || 0 }}
+        </h2>
+      </div>
+
+      <div class="kpi">
+        <small>Em Progresso</small>
+        <h2 style="color: #ffd978">{{ stats?.inProgressTasks || 0 }}</h2>
+      </div>
+
+      <div class="kpi">
+        <small>Concluídas</small>
+        <h2 style="color: #4cd964">{{ stats?.completedTasks || 0 }}</h2>
+      </div>
+
+      <div class="kpi">
+        <small>Progresso Global</small>
+        <h2>{{ getPercentual() }}%</h2>
+      </div>
     </section>
 
     <section class="tasks">
       <h2>Lista de Tarefas do Jira</h2>
-      <table>
+      
+      <div *ngIf="loading" style="text-align: center; padding: 2rem; color: #9dbce1;">
+        <i class="fas fa-spinner fa-spin"></i> Carregando dados do Jira...
+      </div>
+
+      <table *ngIf="!loading">
         <thead>
           <tr>
-            <th>Título</th>
+            <th>Chave</th>
+            <th>Resumo</th>
             <th>Responsável</th>
             <th>Status</th>
-            <th>Prazo</th>
+            <th>Prazo (Due Date)</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let task of tasks" (click)="openAnalysis(task)">
-            <td>{{ task.title }}</td>
-            <td>{{ task.assignee }}</td>
-            <td><span [class]="task.status.toLowerCase().replace(' ', '-')">{{ task.status }}</span></td>
-            <td>{{ task.dueDate }}</td>
+            <td style="color: #9dbce1; font-size: 0.85rem;">{{ task.key }}</td>
+            
+            <td>{{ task.summary }}</td>
+            
+            <td>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width: 24px; height: 24px; background: #2c5cff; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-size: 0.7rem;">
+                  {{ task.assignee ? task.assignee.charAt(0) : '?' }}
+                </div>
+                {{ task.assignee || 'Não atribuído' }}
+              </div>
+            </td>
+
+            <td>
+              <span [class]="task.status.toLowerCase().replace(' ', '-')">
+                {{ task.status }}
+              </span>
+            </td>
+
+            <td>{{ task.duedate || '---' }}</td>
           </tr>
         </tbody>
       </table>
@@ -52,14 +83,15 @@
     <section class="cards">
       <div class="card">
         <h3>Projeções de Prazos</h3>
-        <div class="placeholder">[Gráfico de linha em breve]</div>
+        <div class="placeholder">
+          <p style="color: #9dbce1">Gráfico de Burnup em desenvolvimento...</p>
+        </div>
       </div>
       <div class="card">
-        <h3>Recomendações da IA</h3>
+        <h3>Recomendações Rápidas</h3>
         <ul class="updates">
-          <li>🔍 O backlog “API Review” pode ser paralelizado com “Frontend Ajustes”.</li>
-          <li>⚠️ “Deploy DevOps” apresenta risco de atraso de 2 dias.</li>
-          <li>🚀 Sugestão: redistribuir 3 tarefas para o time Backend.</li>
+          <li>🔍 Clique em uma tarefa na tabela para ver a análise detalhada da IA.</li>
+          <li>⚠️ Verifique as {{ stats?.delayedTasks || 0 }} tarefas que estão marcadas como atrasadas.</li>
         </ul>
       </div>
     </section>
@@ -74,10 +106,17 @@
         <p>{{ msg.text }}</p>
       </div>
     </div>
-    <form class="chat-input" (ngSubmit)="sendMessage()">
-      <input [(ngModel)]="userInput" name="message" type="text" placeholder="Pergunte algo à AnalisAI..." autocomplete="off" />
-      <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
-    </form>
+    <div class="chat-input">
+      <input 
+        [(ngModel)]="userInput" 
+        (keyup.enter)="sendMessage()" 
+        type="text" 
+        placeholder="Pergunte algo à IA..." 
+      />
+      <button (click)="sendMessage()">
+        <i class="fa-solid fa-paper-plane"></i>
+      </button>
+    </div>
   </div>
 
   <div class="analysis-panel" [class.active]="showAnalysis">
@@ -86,27 +125,47 @@
       <button class="close" (click)="closeAnalysis()">×</button>
     </div>
 
-    <div *ngIf="selectedTask" class="content">
-      <h4>{{ selectedTask.title }}</h4>
-
-      <div class="section">
-        <h5>Riscos</h5>
-        <p>Esta tarefa depende da finalização de “{{ tasks[0].title }}”.</p>
+    <div *ngIf="selectedTask" class="content-panel">
+      <div style="margin-bottom: 1.5rem; border-bottom: 1px solid #1e3f6d; padding-bottom: 1rem;">
+        <span style="background: #2b6eff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">{{ selectedTask.key }}</span>
+        <h4 style="margin-top: 0.5rem; color: white;">{{ selectedTask.summary }}</h4>
       </div>
 
-      <div class="section">
-        <h5>Dependências</h5>
-        <p>Associada ao módulo de integração e autenticação do Jira Cloud.</p>
+      <div *ngIf="analyzing" style="text-align: center; padding: 2rem; color: #9dbce1;">
+        <p>🤖 A IA está analisando riscos e dependências...</p>
+        <div class="loading-spinner"></div> 
+        </div>
+
+      <div *ngIf="!analyzing && aiAnalysisResult">
+        
+        <div class="section" *ngIf="aiAnalysisResult.riscosIdentificados?.length">
+          <h5 style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> Riscos Identificados</h5>
+          <ul>
+            <li *ngFor="let risco of aiAnalysisResult.riscosIdentificados">{{ risco }}</li>
+          </ul>
+        </div>
+
+        <div class="section" *ngIf="aiAnalysisResult.dependenciasObrigatorias?.length">
+          <h5 style="color: #ffd978;"><i class="fas fa-link"></i> Dependências</h5>
+          <ul>
+            <li *ngFor="let dep of aiAnalysisResult.dependenciasObrigatorias">{{ dep }}</li>
+          </ul>
+        </div>
+
+        <div class="section" *ngIf="aiAnalysisResult.sugestoesOtimizacao?.length">
+          <h5 style="color: #4cd964;"><i class="fas fa-rocket"></i> Sugestões de Otimização</h5>
+          <ul>
+            <li *ngFor="let sug of aiAnalysisResult.sugestoesOtimizacao">{{ sug }}</li>
+          </ul>
+        </div>
+
+        <button class="apply" (click)="closeAnalysis()">Entendido</button>
       </div>
 
-      <div class="section">
-        <h5>Sugestões da IA</h5>
-        <ul>
-          <li>✅ Realocar esta tarefa para o time Backend.</li>
-          <li>⏱️ Reduzir prazo em 2 dias após otimização de recursos.</li>
-        </ul>
-        <button class="apply" (click)="applySuggestion()">Aplicar sugestão</button>
+      <div *ngIf="!analyzing && !aiAnalysisResult">
+        <p>Não foi possível gerar a análise no momento.</p>
       </div>
+
     </div>
   </div>
 </div>

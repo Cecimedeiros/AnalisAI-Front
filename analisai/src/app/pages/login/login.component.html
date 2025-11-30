@@ -1,33 +1,89 @@
-<div class="login-page">
-  <div class="login-left">
-    <div class="brand">
-      <i class="fa-solid fa-brain"></i>
-      <span>AnalisAI</span>
+<div class="login-container">
+  
+  <div class="background-glow"></div>
+
+  <div class="login-content">
+    
+    <div class="login-left">
+      <div class="brand">
+        <i class="fa-solid fa-brain logo-icon"></i>
+        <span>AnalisAI</span>
+      </div>
+      <div class="hero-text">
+        <h1>Inteligência para o seu Jira.</h1>
+        <p>Identifique gargalos, preveja riscos e otimize suas entregas com o poder da IA.</p>
+      </div>
+      <div class="badges">
+        <span><i class="fa-brands fa-jira"></i> Jira Cloud</span>
+        <span><i class="fa-solid fa-wand-magic-sparkles"></i> Gemini AI</span>
+      </div>
     </div>
-    <div class="headline">
-      <h1>Planeje com Inteligência</h1>
-      <p>Conecte-se ao Jira e deixe a IA otimizar suas entregas.</p>
-    </div>
-  </div>
 
-  <div class="login-right">
-    <div class="card">
-      <h2>Entrar</h2>
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <label>Email</label>
-        <input type="email" formControlName="email" placeholder="email@empresa.com" />
-
-        <label>Senha</label>
-        <input type="password" formControlName="password" placeholder="••••••••" />
-
-        <div class="remember">
-          <input type="checkbox" id="remember" formControlName="remember" />
-          <label for="remember">Lembrar-me</label>
+    <div class="login-right">
+      <div class="login-card">
+        
+        <div class="card-header">
+          <h2>Bem-vindo</h2>
+          <p>Insira suas credenciais para continuar</p>
         </div>
 
-        <button type="submit" class="btn-primary">Entrar</button>
-        <button type="button" class="btn-secondary" (click)="goDemo()">Acessar Demo</button>
-      </form>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          
+          <div class="input-group">
+            <label>Email Corporativo</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-envelope"></i>
+              <input 
+                type="email" 
+                formControlName="email" 
+                placeholder="nome@empresa.com"
+                [class.error]="form.get('email')?.invalid && form.get('email')?.touched"
+              />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Token de API do Jira</label>
+            <div class="input-wrapper">
+              <i class="fa-solid fa-key"></i>
+              <input 
+                type="password" 
+                formControlName="password" 
+                placeholder="Cole seu token aqui"
+                [class.error]="form.get('password')?.invalid && form.get('password')?.touched"
+              />
+            </div>
+            <a href="https://id.atlassian.com/manage-profile/security/api-tokens" target="_blank" class="help-link">
+              Onde pego meu token?
+            </a>
+          </div>
+
+          <div class="options">
+            <label class="checkbox-container">
+              <input type="checkbox" formControlName="remember">
+              <span class="checkmark"></span>
+              Lembrar de mim
+            </label>
+          </div>
+
+          <div *ngIf="errorMessage" class="error-banner">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span>{{ errorMessage }}</span>
+          </div>
+
+          <div class="actions">
+            <button type="submit" class="btn-primary" [disabled]="loading || form.invalid">
+              <span *ngIf="!loading">Entrar na Plataforma</span>
+              <span *ngIf="loading"><i class="fa-solid fa-spinner fa-spin"></i> Conectando...</span>
+            </button>
+            
+            <button type="button" class="btn-secondary" (click)="goDemo()">
+              Acessar Demo Visual
+            </button>
+          </div>
+
+        </form>
+      </div>
     </div>
   </div>
 </div>
