@@ -53,4 +53,13 @@ Este repositório contém o **frontend** da aplicação **analisAI**, desenvolvi
     ng serve -o
   ```
   
+  ### 👩‍💻 Equipe
+
+- Beatriz Paredes 
+- Catarina Loureiro
+- Cecília Medeiros 
+- Isabella Batista
+- Maria Gabriela Damásio
+- Melissa Filgueiras
+- José Leandro Morais
 ### 🔗Backend do Projeto: [AnalisAI - Backend](https://github.com/BeatrizParedes/AnalisAI-Back)
