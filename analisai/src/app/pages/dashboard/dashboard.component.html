@@ -4,7 +4,7 @@
   <div class="content">
     <header>
       <h1>Visão Geral</h1>
-      <p>Insights gerados pela IA com base no backlog do Jira</p>
+      <p>Projeto: Recrutamento e Onboarding (Dados Locais)</p>
     </header>
 
     <section class="kpis">
@@ -21,7 +21,7 @@
       </div>
 
       <div class="kpi">
-        <small>Em Progresso</small>
+        <small>Em Andamento</small>
         <h2 style="color: #ffd978">{{ stats?.inProgressTasks || 0 }}</h2>
       </div>
 
@@ -40,23 +40,26 @@
       <h2>Lista de Tarefas do Jira</h2>
       
       <div *ngIf="loading" style="text-align: center; padding: 2rem; color: #9dbce1;">
-        <i class="fas fa-spinner fa-spin"></i> Carregando dados do Jira...
+        <i class="fas fa-spinner fa-spin"></i> Carregando dados...
       </div>
 
       <table *ngIf="!loading">
         <thead>
           <tr>
             <th>Chave</th>
+            <th>Tipo</th>
             <th>Resumo</th>
             <th>Responsável</th>
             <th>Status</th>
-            <th>Prazo (Due Date)</th>
+            <th>Criado em</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let task of tasks" (click)="openAnalysis(task)">
             <td style="color: #9dbce1; font-size: 0.85rem;">{{ task.key }}</td>
             
+            <td><span class="badge-type">{{ task.issuetype }}</span></td>
+
             <td>{{ task.summary }}</td>
             
             <td>
@@ -69,31 +72,15 @@
             </td>
 
             <td>
-              <span [class]="task.status.toLowerCase().replace(' ', '-')">
+              <span [class]="getStatusClass(task.status)">
                 {{ task.status }}
               </span>
             </td>
 
-            <td>{{ task.duedate || '---' }}</td>
+            <td>{{ task.created }}</td>
           </tr>
         </tbody>
       </table>
-    </section>
-
-    <section class="cards">
-      <div class="card">
-        <h3>Projeções de Prazos</h3>
-        <div class="placeholder">
-          <p style="color: #9dbce1">Gráfico de Burnup em desenvolvimento...</p>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Recomendações Rápidas</h3>
-        <ul class="updates">
-          <li>🔍 Clique em uma tarefa na tabela para ver a análise detalhada da IA.</li>
-          <li>⚠️ Verifique as {{ stats?.delayedTasks || 0 }} tarefas que estão marcadas como atrasadas.</li>
-        </ul>
-      </div>
     </section>
   </div>
 
@@ -129,43 +116,28 @@
       <div style="margin-bottom: 1.5rem; border-bottom: 1px solid #1e3f6d; padding-bottom: 1rem;">
         <span style="background: #2b6eff; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem;">{{ selectedTask.key }}</span>
         <h4 style="margin-top: 0.5rem; color: white;">{{ selectedTask.summary }}</h4>
+        <p style="font-size: 0.8rem; color: #9dbce1;">Responsável: {{ selectedTask.assignee }}</p>
       </div>
 
       <div *ngIf="analyzing" style="text-align: center; padding: 2rem; color: #9dbce1;">
         <p>🤖 A IA está analisando riscos e dependências...</p>
-        <div class="loading-spinner"></div> 
-        </div>
+      </div>
 
       <div *ngIf="!analyzing && aiAnalysisResult">
-        
         <div class="section" *ngIf="aiAnalysisResult.riscosIdentificados?.length">
-          <h5 style="color: #ff6b6b;"><i class="fas fa-exclamation-triangle"></i> Riscos Identificados</h5>
+          <h5 style="color: #ff6b6b;">Riscos Identificados</h5>
           <ul>
             <li *ngFor="let risco of aiAnalysisResult.riscosIdentificados">{{ risco }}</li>
           </ul>
         </div>
 
-        <div class="section" *ngIf="aiAnalysisResult.dependenciasObrigatorias?.length">
-          <h5 style="color: #ffd978;"><i class="fas fa-link"></i> Dependências</h5>
-          <ul>
-            <li *ngFor="let dep of aiAnalysisResult.dependenciasObrigatorias">{{ dep }}</li>
-          </ul>
-        </div>
-
         <div class="section" *ngIf="aiAnalysisResult.sugestoesOtimizacao?.length">
-          <h5 style="color: #4cd964;"><i class="fas fa-rocket"></i> Sugestões de Otimização</h5>
+          <h5 style="color: #4cd964;">Sugestões</h5>
           <ul>
             <li *ngFor="let sug of aiAnalysisResult.sugestoesOtimizacao">{{ sug }}</li>
           </ul>
         </div>
-
-        <button class="apply" (click)="closeAnalysis()">Entendido</button>
       </div>
-
-      <div *ngIf="!analyzing && !aiAnalysisResult">
-        <p>Não foi possível gerar a análise no momento.</p>
-      </div>
-
     </div>
   </div>
 </div>
